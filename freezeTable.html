@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">         
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="./jquery.stickytableheaders.js"></script>
+<style>
+    .tableFloatingHeaderOriginal{
+        background-color: white
+    }
+</style>
 <script>
     $(document).ready(function () {
         bindTable();
@@ -93,7 +99,7 @@
     //凍結窗格事件
     var activeFlag = false;
     function freezeScrollEvent(originalTable) {
-        var $offset = $('.navbar').height();
+        var $offset = 0;
         var $originalTable = $(originalTable);
         var $freezeTable = $('#freezeTable');
         var limitLeft = $originalTable.offset().left;
@@ -110,13 +116,14 @@
                 $freezeTable.show();
 
                 $originalTable.find('tbody').delegate('tr','hover', function(){
-                　　console.log($(this).index());
+                console.log($(this).index());
                 });
 
+                
                 //選取列與凍結列同步變色
                 $originalTable.find('tbody').find('tr').hover(
                     function(){
-                        $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#FEF4EC');
+                        $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
                     },
                     function(){
                         if($(this).index() % 2 == 0){
@@ -127,10 +134,12 @@
                         }
                     }
                 );
+                
+
                 //凍結列與選取列同步變色
                 $freezeTable.find('tbody').find('tr').hover(
                     function(){
-                        $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#FEF4EC');
+                        $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
                     },
                     function(){
                         if($(this).index() % 2 == 0){
@@ -161,7 +170,9 @@
             //freezeTable置於table上層
             $freezeTable.stickyTableHeaders({ fixedOffset: $offset });
             $freezeTable.css('z-index', 100);
-        }            
+        }
+
+        console.log(limitTop);
     }
 
     $(window).scroll(function () {
@@ -181,8 +192,6 @@
 </head>
 
 <body>
-    <div id='divTable'>
-
-    </div>
+    <div id='divTable'></div>
 </body>
 </html>
