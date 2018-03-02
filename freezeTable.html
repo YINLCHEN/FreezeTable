@@ -89,7 +89,7 @@
     }
 
     function freezeEvent(originalTable) {
-        var $offset = $('.navbar').height();
+        var $offset = 0;
         var $originalTable = $(originalTable);
 
         //Header: stickyTableHeaders套件設定
@@ -114,45 +114,11 @@
             //若超過limitLeft極限僅需BIND一次
             if (!activeFlag) {
                 $freezeTable.show();
-
-                $originalTable.find('tbody').delegate('tr','hover', function(){
-                console.log($(this).index());
-                });
-
-                
-                //選取列與凍結列同步變色
-                $originalTable.find('tbody').find('tr').hover(
-                    function(){
-                        $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
-                    },
-                    function(){
-                        if($(this).index() % 2 == 0){
-                            $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#F9F9F9');
-                        }
-                        else{
-                            $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','white');
-                        }
-                    }
-                );
-                
-
-                //凍結列與選取列同步變色
-                $freezeTable.find('tbody').find('tr').hover(
-                    function(){
-                        $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
-                    },
-                    function(){
-                        if($(this).index() % 2 == 0){
-                            $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#F9F9F9');
-                        }
-                        else{
-                            $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','white');
-                        }
-                    }
-                );
-
+                changeTableColor(originalTable);
                 activeFlag = true;
             }
+
+            $freezeTable.stickyTableHeaders({ fixedOffset: $offset });
         }
         else {
             $('#freezeTable').hide();
@@ -161,33 +127,63 @@
             activeFlag = false;
         }
 
-        if($(window).scrollTop() > 0){
-            //上下滾軸移動時，freezeTable跟著移動
+
+        if ($(window).scrollTop() > limitTop && activeFlag == true) {
+            //freezeTable置於table上層
+            $freezeTable.css('z-index', 100);
             $freezeTable.css('top', $originalTable.offset().top - $(window).scrollTop());
         }
-
-        if ($(window).scrollTop() > limitTop) {
-            //freezeTable置於table上層
-            $freezeTable.stickyTableHeaders({ fixedOffset: $offset });
-            $freezeTable.css('z-index', 100);
-        }
-
-        console.log(limitTop);
     }
 
     $(window).scroll(function () {
         var $originalTable = $('Table');
         freezeScrollEvent($originalTable);
-        
-        $('#animatePosition').each(function(){
-            $(this).css('left', $(window).scrollLeft());
-        });
     })
 
     $(window).resize(function () {
         var $originalTable = $('Table');
         freezeScrollEvent($originalTable);
     });
+
+    function changeTableColor(originalTable){
+        
+        var $originalTable = $(originalTable);
+        var $freezeTable = $('#freezeTable');
+
+        $originalTable.find('tbody').delegate('tr','hover', function(){
+        });
+        
+        //選取列與凍結列同步變色
+        $originalTable.find('tbody').find('tr').hover(
+            function(){
+                $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
+            },
+            function(){
+                if($(this).index() % 2 == 0){
+                    $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#F3F3F3');
+                }
+                else{
+                    $freezeTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','white');
+                }
+            }
+        );
+
+        //凍結列與選取列同步變色
+        $freezeTable.find('tbody').find('tr').hover(
+            function(){
+                $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#ECECEC');
+            },
+            function(){
+                if($(this).index() % 2 == 0){
+                    $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','#F3F3F3');
+                }
+                else{
+                    $originalTable.find('tbody').find('tr').eq( $(this).index() ).css('background-color','white');
+                }
+            }
+        );
+    }
+    
 </script>
 </head>
 
